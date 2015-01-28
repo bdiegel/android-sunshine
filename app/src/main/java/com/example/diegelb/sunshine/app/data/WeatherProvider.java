@@ -16,6 +16,7 @@
 package com.example.diegelb.sunshine.app.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -160,16 +161,37 @@ public class WeatherProvider extends ContentProvider {
                  );
                  break;
              }
-
-             /**
-              * TODO YOUR CODE BELOW HERE FOR QUIZ
-              * QUIZ - 4b - Implement Location_ID queries
-              * https://www.udacity.com/course/viewer#!/c-ud853/l-1576308909/e-1675098551/m-1675098552
-              **/
-
+             // "location"
+             case LOCATION: {
+                 retCursor = mOpenHelper.getReadableDatabase().query(
+                         WeatherContract.LocationEntry.TABLE_NAME,
+                         projection,
+                         selection,
+                         selectionArgs,
+                         null,
+                         null,
+                         sortOrder
+                 );
+                 break;
+             }
+             // "location/*"
+             case LOCATION_ID: {
+                 long id = ContentUris.parseId(uri);
+                 retCursor = mOpenHelper.getReadableDatabase().query(
+                         WeatherContract.LocationEntry.TABLE_NAME,
+                         projection,
+                         WeatherContract.LocationEntry._ID + " = '" + id + "'",
+                         null,
+                         null,
+                         null,
+                         sortOrder
+                 );
+                 break;
+             }
              default:
                  throw new UnsupportedOperationException("Unknown uri: " + uri);
-         }
+         };
+
          retCursor.setNotificationUri(getContext().getContentResolver(), uri);
          return retCursor;
      }
@@ -187,6 +209,10 @@ public class WeatherProvider extends ContentProvider {
                  return WeatherContract.WeatherEntry.CONTENT_TYPE;
              case WEATHER:
                  return WeatherContract.WeatherEntry.CONTENT_TYPE;
+             case LOCATION:
+                 return WeatherContract.LocationEntry.CONTENT_TYPE;
+             case LOCATION_ID:
+                 return WeatherContract.LocationEntry.CONTENT_ITEM_TYPE;
 
              /**
               * TODO YOUR CODE BELOW HERE FOR QUIZ
