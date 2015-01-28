@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.test.AndroidTestCase;
+import android.util.Log;
 
 import com.example.diegelb.sunshine.app.data.WeatherContract.LocationEntry;
 import com.example.diegelb.sunshine.app.data.WeatherContract.WeatherEntry;
@@ -53,10 +54,6 @@ public class TestProvider extends AndroidTestCase {
          assertEquals(0, cursor.getCount());
          cursor.close();
 
-         /* TODO Uncomment for
-         4b - Implement Location_ID queries
-         https://www.udacity.com/course/viewer#!/c-ud853/l-1576308909/e-1675098551/m-1675098552
-         */
          cursor = mContext.getContentResolver().query(
                  LocationEntry.CONTENT_URI,
                  null,
@@ -74,10 +71,6 @@ public class TestProvider extends AndroidTestCase {
          deleteAllRecords();
      }
 
-     /* TODO Uncomment for
-     4b - Implement Location_ID queries
-     https://www.udacity.com/course/viewer#!/c-ud853/l-1576308909/e-1675098551/m-1675098552
-    */
      public void testInsertReadProvider() {
 
          ContentValues testValues = TestDb.createNorthPoleLocationValues();
@@ -166,13 +159,7 @@ public class TestProvider extends AndroidTestCase {
          );
          TestDb.validateCursor(weatherCursor, weatherValues);
      }
-    
-    
 
-     /* TODO Uncomment for
-     4b - Coding the Content Provider : getType()
-     https://www.udacity.com/course/viewer#!/c-ud853/l-1576308909/e-1675098546/m-1675098547
-     */
      public void testGetType() {
          // content://com.example.android.sunshine.app/weather/
          String type = mContext.getContentResolver().getType(WeatherEntry.CONTENT_URI);
@@ -213,6 +200,7 @@ public class TestProvider extends AndroidTestCase {
      /* TODO Uncomment for
      4b - Updating and Deleting
      https://www.udacity.com/course/viewer#!/c-ud853/l-1576308909/e-1675098563/m-1675098564
+     */
      public void testUpdateLocation() {
          // Create a new map of values, where column names are the keys
          ContentValues values = TestDb.createNorthPoleLocationValues();
@@ -246,7 +234,6 @@ public class TestProvider extends AndroidTestCase {
 
          TestDb.validateCursor(cursor, updatedValues);
      }
-     */
 
      // Make sure we can still delete after adding/updating stuff
      public void testDeleteRecordsAtEnd() {
