@@ -18,6 +18,7 @@ package com.example.diegelb.sunshine.app.data;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,9 +58,9 @@ public class WeatherContract {
     https://www.udacity.com/course/viewer#!/c-ud853/l-1576308909/m-1675098569
     // Format used for storing dates in the database.  ALso used for converting those strings
     // back into date objects for comparison/processing.
-    
-    public static final String DATE_FORMAT = "yyyyMMdd";
     */
+    public static final String DATE_FORMAT = "yyyyMMdd";
+
 
     /**
      * Converts Date class to a string representation, used for easy comparison and database lookup.
@@ -69,13 +70,14 @@ public class WeatherContract {
     /* TODO Uncomment for
     4b - Finishing the FetchWeatherTask
     https://www.udacity.com/course/viewer#!/c-ud853/l-1576308909/m-1675098569
+    */
     public static String getDbDateString(Date date){
         // Because the API returns a unix timestamp (measured in seconds),
         // it must be converted to milliseconds in order to be converted to valid date.
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         return sdf.format(date);
     }
-    */
+
 
     /**
      * Converts a dateText to a long Unix time representation
@@ -85,6 +87,7 @@ public class WeatherContract {
     /* TODO Uncomment for
     4b - Finishing the FetchWeatherTask
     https://www.udacity.com/course/viewer#!/c-ud853/l-1576308909/m-1675098569
+    */
     public static Date getDateFromDb(String dateText) {
         SimpleDateFormat dbDateFormat = new SimpleDateFormat(DATE_FORMAT);
         try {
@@ -94,7 +97,7 @@ public class WeatherContract {
             return null;
         }
     }
-    */
+
 
     public static final class LocationEntry implements BaseColumns {
 

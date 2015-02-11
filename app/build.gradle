@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.diegelb.sunshine.app"
-        minSdkVersion 10
+        minSdkVersion 11
         // There is a bug in version 21 where the action bar does not show up.
         //targetSdkVersion 21
         targetSdkVersion 20
