@@ -92,7 +92,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //        forecasts.add("Sat - Sunny - 76/68");
 
         mAdapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.list_item_forecast_old,
+                R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
                 forecasts);
 
