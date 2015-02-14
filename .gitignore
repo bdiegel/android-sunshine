@@ -4,4 +4,6 @@
 /.idea/libraries
 .DS_Store
 /build
-.idea
+.idea/
+app/app.iml
+*.iml
