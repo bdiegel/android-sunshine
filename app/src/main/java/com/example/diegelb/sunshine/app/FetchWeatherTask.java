@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.example.diegelb.sunshine.app.data.WeatherContract;
 import com.example.diegelb.sunshine.app.data.WeatherContract.LocationEntry;
@@ -33,43 +32,46 @@ import java.util.Vector;
 /**
  * Created by bdiegel on 2/9/15.
  */
-public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
+//public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
+public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
    private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
-   private ArrayAdapter<String> mForecastAdapter;
+   //private ArrayAdapter<String> mForecastAdapter;
 
    private final Context mContext;
 
    private boolean DEBUG = true;
 
 
-   public FetchWeatherTask(Context context, ArrayAdapter<String> forecastAdapter) {
+   //public FetchWeatherTask(Context context, ArrayAdapter<String> forecastAdapter) {
+   public FetchWeatherTask(Context context) {
       mContext = context;
-      mForecastAdapter = forecastAdapter;
+      //mForecastAdapter = forecastAdapter;
    }
 
+//   @Override
+//   protected void onPostExecute(String[] forecasts) {
+//      super.onPostExecute(forecasts);
+//
+//      if (forecasts != null){
+//         mForecastAdapter.clear();
+//
+//         for (String forecast : forecasts) {
+//            //mForecastAdapter.insert(forecast, mForecastAdapter.getCount());
+//            if (forecast != null)
+//               mForecastAdapter.add(forecast);
+//            else
+//               Log.d(LOG_TAG, "NULL forecast");
+//         }
+//      }
+//
+//      // mAdapter.notifyDataSetChanged(); <- called automatically for arrayadapter
+//   }
+
    @Override
-   protected void onPostExecute(String[] forecasts) {
-      super.onPostExecute(forecasts);
-
-      if (forecasts != null){
-         mForecastAdapter.clear();
-
-         for (String forecast : forecasts) {
-            //mForecastAdapter.insert(forecast, mForecastAdapter.getCount());
-            if (forecast != null)
-               mForecastAdapter.add(forecast);
-            else
-               Log.d(LOG_TAG, "NULL forecast");
-         }
-      }
-
-      // mAdapter.notifyDataSetChanged(); <- called automatically for arrayadapter
-   }
-
-   @Override
-   protected String[] doInBackground(String... params) {
+   //protected String[] doInBackground(String... params) {
+   protected Void doInBackground(String... params) {
       if (params.length == 0)
          return null;
 
@@ -154,13 +156,13 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
          }
       }
 
-      try {
-         return getWeatherDataFromJson(forecastJsonStr, numDays, locationQuery);
-      } catch (JSONException e) {
-         Log.e(LOG_TAG, "Error ", e);
-         e.printStackTrace();
-      }
-
+//      try {
+//         return getWeatherDataFromJson(forecastJsonStr, numDays, locationQuery);
+//      } catch (JSONException e) {
+//         Log.e(LOG_TAG, "Error ", e);
+//         e.printStackTrace();
+//      }
+//
       // error getting or parsing data
       return null;
    }
@@ -269,9 +271,9 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
          cVVector.add(weatherValues);
 
-         String highAndLow = formatHighLows(high, low);
-         String day = getReadableDateString(dateTime);
-         resultStrs[i] = day + " - " + description + " - " + highAndLow;
+//         String highAndLow = formatHighLows(high, low);
+//         String day = getReadableDateString(dateTime);
+//         resultStrs[i] = day + " - " + description + " - " + highAndLow;
 
          //highAndLow = formatHighLows(high, low);
          //resultStrs[i] = day + " - " + description + " - " + highAndLow;
@@ -330,8 +332,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
    private String formatHighLows(double high, double low) {
       SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
       String units = sharedPref.getString(
-            mContext.getString(R.string.pref_unit_key),
-            mContext.getString(R.string.pref_unit_default));
+            mContext.getString(R.string.pref_units_key),
+            mContext.getString(R.string.pref_units_metric));
 
       // convert if unit of measure is imperial
       if (units.equals("imperial")) {

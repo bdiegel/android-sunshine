@@ -10,7 +10,7 @@
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <EditTextPreference
         android:key="@string/pref_location_key"
-        android:title="@string/pref_location_title"
+        android:title="@string/pref_location_label"
         android:defaultValue="@string/pref_location_default"
         android:selectAllOnFocus="true"
         android:inputType="text"
@@ -31,9 +31,9 @@
         <!--android:positiveButtonText="@null" />-->
 
     <ListPreference
-        android:title="@string/pref_unit_title"
-        android:key="@string/pref_unit_key"
-        android:defaultValue="@string/pref_unit_default"
+        android:title="@string/pref_units_label"
+        android:key="@string/pref_units_key"
+        android:defaultValue="@string/pref_units_metric"
         android:entryValues="@array/pref_unit_values"
         android:entries="@array/pref_unit_options"/>
 
