@@ -3,14 +3,11 @@ package com.example.diegelb.sunshine.app;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,43 +16,43 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.diegelb.sunshine.app.data.WeatherContract;
 import com.example.diegelb.sunshine.app.data.WeatherContract.WeatherEntry;
 
-import java.util.Date;
-
 /**
- * Created by diegelb on 1/26/15.
+ * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    //private ArrayAdapter<String> mAdapter;
-    SimpleCursorAdapter mAdapter;
+    private ForecastAdapter mForecastAdapter;
 
-    private String mLocation;
 
     // loader id
     private static final int FORECAST_LOADER = 0;
 
     private static final String[] FORECAST_COLUMNS = {
-         WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
-         WeatherContract.WeatherEntry.COLUMN_DATETEXT,
-         WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
-         WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
-         WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
-         WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING
+          WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+          WeatherContract.WeatherEntry.COLUMN_DATE,
+          WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+          WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+          WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+          WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+          WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+          WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+          WeatherContract.LocationEntry.COLUMN_COORD_LNG
     };
 
     // indices for FORECAST_COLUMNS (order important)
-    public static final int COL_WEATHER_ID = 0;
-    public static final int COL_WEATHER_DATE = 1;
-    public static final int COL_WEATHER_DESC = 2;
-    public static final int COL_WEATHER_MAX_TEMP = 3;
-    public static final int COL_WEATHER_MIN_TEMP = 4;
-    public static final int COL_LOCATION_SETTING = 5;
-
+    static final int COL_WEATHER_ID = 0;
+    static final int COL_WEATHER_DATE = 1;
+    static final int COL_WEATHER_DESC = 2;
+    static final int COL_WEATHER_MAX_TEMP = 3;
+    static final int COL_WEATHER_MIN_TEMP = 4;
+    static final int COL_LOCATION_SETTING = 5;
+    static final int COL_WEATHER_CONDITION_ID = 6;
+    static final int COL_COORD_LAT = 7;
+    static final int COL_COORD_LONG = 8;
 
     public ForecastFragment() {
     }
@@ -63,103 +60,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
     }
 
-    /**
-     * Loaders are initialized here (not when fragment is created) because
-     * their lifecycle is bound to the activity
-     * @param savedInstanceState
-     */
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(FORECAST_LOADER, null, this);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-//        List<String> forecasts = new ArrayList<String>();
-//        forecasts.add("Today - Sunny - 88/63");
-//        forecasts.add("Tomorrow - Foggy - 70/46");
-//        forecasts.add("Weds - Cloudy - 72/63");
-//        forecasts.add("Thu - Rainy - 64/51");
-//        forecasts.add("Fri - Foggy - 70/46");
-//        forecasts.add("Sat - Sunny - 76/68");
-
-//        mAdapter = new ArrayAdapter<String>(getActivity(),
-//                R.layout.list_item_forecast,
-//                R.id.list_item_forecast_textview,
-//                forecasts);
-
-        // The SimpleCursorAdapter will take data from the database through the
-        // Loader and use it to populate the ListView it's attached to.
-        mAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                R.layout.list_item_forecast,
-                null,
-                // the column names to use to fill the textviews
-                new String[]{WeatherContract.WeatherEntry.COLUMN_DATETEXT,
-                        WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
-                        WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
-                        WeatherContract.WeatherEntry.COLUMN_MIN_TEMP
-                },
-                // the textviews to fill with the data pulled from the columns above
-                new int[]{R.id.list_item_date_textview,
-                        R.id.list_item_forecast_textview,
-                        R.id.list_item_high_textview,
-                        R.id.list_item_low_textview
-                },
-                0
-        );
-        mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                boolean isMetric = Utility.isMetric(getActivity());
-                switch (columnIndex) {
-                    case COL_WEATHER_MAX_TEMP:
-                    case COL_WEATHER_MIN_TEMP: {
-                        // we have to do some formatting and possibly a conversion
-                        ((TextView) view).setText(Utility.formatTemperature(
-                                cursor.getDouble(columnIndex), isMetric));
-                        return true;
-                    }
-                    case COL_WEATHER_DATE: {
-                        String dateString = cursor.getString(columnIndex);
-                        TextView dateView = (TextView) view;
-                        dateView.setText(Utility.formatDate(dateString));
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        // Get a reference to the ListView, and attach this adapter to it.
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
-        listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, "placeholder");
-                startActivity(intent);
-            }
-        });
-
-        return rootView;
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
         inflater.inflate(R.menu.forecastfragment, menu);
     }
 
@@ -169,31 +76,80 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == R.id.action_refresh) {
             updateWeather();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        String locationSetting = Utility.getPreferredLocation(getActivity());
+
+        // Sort order:  Ascending, by date.
+        String sortOrder = WeatherEntry.COLUMN_DATE + " ASC";
+        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+              locationSetting, System.currentTimeMillis());
+
+        Cursor cur = getActivity().getContentResolver().query(weatherForLocationUri,
+              null, null, null, sortOrder);
+
+        // The CursorAdapter will take data from our cursor and populate the ListView
+        // However, we cannot use FLAG_AUTO_REQUERY since it is deprecated, so we will end
+        // up with an empty list the first time we run.
+        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
+
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        // Get a reference to the ListView, and attach this adapter to it.
+        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        listView.setAdapter(mForecastAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                // if it cannot seek to that position.
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                    String locationSetting = Utility.getPreferredLocation(getActivity());
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                          .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                                locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                          ));
+                    startActivity(intent);
+                }
+            }
+        });
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(FORECAST_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    public void onLocationChanged() {
         updateWeather();
+        this.getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
     private void updateWeather() {
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        String postcode = sharedPref.getString(getString(R.string.pref_location_key),
-//                getString(R.string.pref_location_default));
-
-        //AsyncTask<String, Void, String[]> fetchTask = new FetchWeatherTask(getActivity(), mAdapter);
-        AsyncTask<String, Void, Void> fetchTask = new FetchWeatherTask(getActivity());
-        fetchTask.execute(Utility.getPreferredLocation(getActivity()));
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
+        String location = Utility.getPreferredLocation(getActivity());
+        weatherTask.execute(location);
     }
 
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        updateWeather();
+//    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -203,17 +159,20 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         // To only show current and future dates, get the String representation for today,
         // and filter the query to return weather only for dates after or including today.
         // Only return data after today.
-        String startDate = WeatherContract.getDbDateString(new Date());
+        //long startDate = WeatherContract.getDbDate(new Date());
+        long startDate = System.currentTimeMillis();
 
         // Sort order:  Ascending, by date.
-        String sortOrder = WeatherEntry.COLUMN_DATETEXT + " ASC";
+        String sortOrder = WeatherEntry.COLUMN_DATE + " ASC";
 
-        mLocation = Utility.getPreferredLocation(getActivity());
+        String locationSetting = Utility.getPreferredLocation(getActivity());
+
         Uri weatherForLocationUri = WeatherEntry.buildWeatherLocationWithStartDate(
-              mLocation, startDate);
+              locationSetting, startDate);
 
         // Now create and return a CursorLoader that will take care of
         // creating a Cursor for the data being displayed.
+        // use column indices to specify a projection
         return new CursorLoader(
               getActivity(),
               weatherForLocationUri,
@@ -226,19 +185,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(data);
+        mForecastAdapter.swapCursor(data);
     }
 
-    /**
-     * Called when a previously created loader is being reset, and thus
-     * making its data unavailable.  The application should at this point
-     * remove any references it has to the Loader's data.
-     *
-     * @param loader The Loader that is being reset.
-     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
+        mForecastAdapter.swapCursor(null);
     }
 }
 

@@ -175,7 +175,8 @@ public class TestProvider extends AndroidTestCase {
          // vnd.android.cursor.dir/com.example.android.sunshine.app/weather
          assertEquals(WeatherEntry.CONTENT_TYPE, type);
 
-         String testDate = "20140612";
+         //String testDate = "20140612";
+         long testDate = 20140612;
          // content://com.example.android.sunshine.app/weather/94074/20140612
          type = mContext.getContentResolver().getType(
                  WeatherEntry.buildWeatherLocationWithDate(testLocation, testDate));
@@ -259,7 +260,7 @@ public class TestProvider extends AndroidTestCase {
      static ContentValues createKalamazooWeatherValues(long locationRowId) {
          ContentValues weatherValues = new ContentValues();
          weatherValues.put(WeatherEntry.COLUMN_LOC_KEY, locationRowId);
-         weatherValues.put(WeatherEntry.COLUMN_DATETEXT, KALAMAZOO_WEATHER_START_DATE);
+         weatherValues.put(WeatherEntry.COLUMN_DATE, KALAMAZOO_WEATHER_START_DATE);
          weatherValues.put(WeatherEntry.COLUMN_DEGREES, 1.2);
          weatherValues.put(WeatherEntry.COLUMN_HUMIDITY, 1.5);
          weatherValues.put(WeatherEntry.COLUMN_PRESSURE, 1.1);

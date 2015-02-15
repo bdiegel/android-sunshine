@@ -77,25 +77,25 @@ public class WeatherProvider extends ContentProvider {
      private static final String sLocationSettingWithStartDateSelection =
              WeatherContract.LocationEntry.TABLE_NAME+
                      "." + WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ? AND " +
-                     WeatherContract.WeatherEntry.COLUMN_DATETEXT + " >= ? ";
+                     WeatherContract.WeatherEntry.COLUMN_DATE + " >= ? ";
 
      private static final String sLocationSettingAndDaySelection =
              WeatherContract.LocationEntry.TABLE_NAME +
                      "." + WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ? AND " +
-                     WeatherContract.WeatherEntry.COLUMN_DATETEXT + " = ? ";
+                     WeatherContract.WeatherEntry.COLUMN_DATE + " = ? ";
 
      private Cursor getWeatherByLocationSetting(Uri uri, String[] projection, String sortOrder) {
          String locationSetting = WeatherContract.WeatherEntry.getLocationSettingFromUri(uri);
-         String startDate = WeatherContract.WeatherEntry.getStartDateFromUri(uri);
+         long startDate = WeatherContract.WeatherEntry.getStartDateFromUri(uri);
 
          String[] selectionArgs;
          String selection;
 
-         if (startDate == null) {
+         if (startDate == 0) {
              selection = sLocationSettingSelection;
              selectionArgs = new String[]{locationSetting};
          } else {
-             selectionArgs = new String[]{locationSetting, startDate};
+             selectionArgs = new String[]{locationSetting, Long.toString(startDate)};
              selection = sLocationSettingWithStartDateSelection;
          }
 
@@ -112,12 +112,12 @@ public class WeatherProvider extends ContentProvider {
      private Cursor getWeatherByLocationSettingAndDate(
              Uri uri, String[] projection, String sortOrder) {
          String locationSetting = WeatherContract.WeatherEntry.getLocationSettingFromUri(uri);
-         String date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+         long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
 
          return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                  projection,
                  sLocationSettingAndDaySelection,
-                 new String[]{locationSetting, date},
+                 new String[]{locationSetting, Long.toString(date)},
                  null,
                  null,
                  sortOrder
