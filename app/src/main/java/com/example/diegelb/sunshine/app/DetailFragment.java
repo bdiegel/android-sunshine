@@ -2,6 +2,7 @@ package com.example.diegelb.sunshine.app;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private ShareActionProvider mShareActionProvider;
 
+    private Uri mUri;
+
     private ImageView mIconView;
     private TextView mDayTv;
     private TextView mDateTv;
@@ -45,7 +48,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private static final String LOG_TAG = DetailActivity.class.getSimpleName();
 
-    private static final String[] FORECAST_COLUMNS = {
+    static final String DETAIL_URI = "URI";
+
+    private static final String[] DETAIL_COLUMNS = {
           WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
           WeatherContract.WeatherEntry.COLUMN_DATE,
           WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
@@ -71,7 +76,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private static final int COL_WEATHER_WIND_SPEED = 7;
     private static final int COL_WEATHER_DEGREES = 8;
     private static final int COL_WEATHER_CONDITION_ID = 9;
-    private static final int COL_LOCATION_SETTING = 10;
+    //private static final int COL_LOCATION_SETTING = 10;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -107,9 +112,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        Intent intent = getActivity().getIntent();
-        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            mForecast = intent.getStringExtra(Intent.EXTRA_TEXT);
+//        Intent intent = getActivity().getIntent();
+//        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+//            mForecast = intent.getStringExtra(Intent.EXTRA_TEXT);
+//        }
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
         }
 
         mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
@@ -136,24 +146,38 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         getLoaderManager().initLoader(DETAILS_LOADER, null, this);
     }
 
+    public void onLocationChanged( String newLocation ) {
+        // replace the uri, since the location has changed
+        Uri uri = mUri;
+        if (null != uri) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mUri = updatedUri;
+            getLoaderManager().restartLoader(DETAILS_LOADER, null, this);
+        }
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.v(LOG_TAG, "In onCreateLoader");
-        Intent intent = getActivity().getIntent();
-        if (intent == null) {
-            return null;
-        }
+//        Intent intent = getActivity().getIntent();
+//        if (intent == null || intent.getData() == null) {
+//            return null;
+//        }
+        if (mUri != null) {
 
-        // Now create and return a CursorLoader that will take care of
-        // creating a Cursor for the data being displayed.
-        return new CursorLoader(
-              getActivity(),
-              intent.getData(),
-              FORECAST_COLUMNS,
-              null,
-              null,
-              null
-        );
+            // Now create and return a CursorLoader that will take care of
+            // creating a Cursor for the data being displayed.
+            return new CursorLoader(
+                  getActivity(),
+                  mUri, //intent.getData(),
+                  DETAIL_COLUMNS,
+                  null,
+                  null,
+                  null
+            );
+        }
+        return null;
     }
 
     @Override

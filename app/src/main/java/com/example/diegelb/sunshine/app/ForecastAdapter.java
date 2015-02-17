@@ -75,6 +75,8 @@ public class ForecastAdapter extends CursorAdapter {
         // Read weather icon ID from cursor
         int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
 
+        Log.i(LOG_TAG, "Weather ID: " + weatherId);
+
         // Use ViewHolder
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
