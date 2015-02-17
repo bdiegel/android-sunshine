@@ -70,7 +70,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private static final int COL_WEATHER_PRESSURE = 6;
     private static final int COL_WEATHER_WIND_SPEED = 7;
     private static final int COL_WEATHER_DEGREES = 8;
-    private static final int COL_WEATHER_WEATHER_ID = 9;
+    private static final int COL_WEATHER_CONDITION_ID = 9;
     private static final int COL_LOCATION_SETTING = 10;
 
     public DetailFragment() {
@@ -112,7 +112,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mForecast = intent.getStringExtra(Intent.EXTRA_TEXT);
         }
 
-        mIconView = (ImageView) rootView.findViewById(R.id.list_item_icon);
+        mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
         mDayTv = (TextView) rootView.findViewById(R.id.detail_day_textview);
         mDateTv = (TextView) rootView.findViewById(R.id.detail_date_textview);
         mHighTv = (TextView) rootView.findViewById(R.id.detail_high_textview);
@@ -184,9 +184,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         //detailTextView.setText(mForecast);
 
         // Read weather icon ID from cursor
-        int weatherId = data.getInt(ForecastFragment.COL_WEATHER_ID);
+        int weatherId = data.getInt(DetailFragment.COL_WEATHER_CONDITION_ID);
 
-        mIconView.setImageResource(R.drawable.ic_launcher);
+        mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
         mDayTv.setText(Utility.getDayName(getActivity(), data.getLong(COL_WEATHER_DATE)));
         mDateTv.setText(Utility.getFormattedMonthDay(getActivity(), data.getLong(COL_WEATHER_DATE)));
         mHighTv.setText(high);
