@@ -29,7 +29,7 @@ public class ForecastAdapter extends CursorAdapter {
     }
 
     private String formatTemp(double temp) {
-        return Utility.formatTemperature(temp, Utility.isMetric(mContext));
+        return Utility.formatTemperature(mContext, temp, Utility.isMetric(mContext));
     }
 
     /*
@@ -40,7 +40,14 @@ public class ForecastAdapter extends CursorAdapter {
         // Choose the layout type
         int viewType = getItemViewType(cursor.getPosition());
         int layoutId = (viewType == VIEW_TYPE_TODAY) ? R.layout.list_item_forecast_today :  R.layout.list_item_forecast;
-        return LayoutInflater.from(context).inflate(layoutId, parent, false);
+
+        View view =  LayoutInflater.from(context).inflate(layoutId, parent, false);
+
+        // Use ViewHolder pattern to save inflated views:
+        ViewHolder viewHolder = new ViewHolder(view);
+        view.setTag(viewHolder);
+
+        return view;
     }
 
     @Override
@@ -68,17 +75,29 @@ public class ForecastAdapter extends CursorAdapter {
         // Read weather icon ID from cursor
         int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_ID);
 
-        ImageView iconView = (ImageView) view.findViewById(R.id.list_item_icon);
-        iconView.setImageResource(R.drawable.ic_launcher);
+        // Use ViewHolder
+        ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        LinearLayout main = (LinearLayout)view;
-        TextView tvDate = (TextView)main.findViewById(R.id.list_item_date_textview);
-        tvDate.setText(Utility.getFriendlyDayString(context, cursor.getLong(ForecastFragment.COL_WEATHER_DATE)));
-        TextView tvForecast = (TextView)main.findViewById(R.id.list_item_forecast_textview);
-        tvForecast.setText(cursor.getString(ForecastFragment.COL_WEATHER_DESC));
-        TextView tvHigh = (TextView)main.findViewById(R.id.list_item_high_textview);
-        tvHigh.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP)));
-        TextView tvLow = (TextView)main.findViewById(R.id.list_item_low_textview);
-        tvLow.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP)));
+        viewHolder.iconView.setImageResource(R.drawable.ic_launcher);
+        viewHolder.dateView.setText(Utility.getFriendlyDayString(context, cursor.getLong(ForecastFragment.COL_WEATHER_DATE)));
+        viewHolder.forecastView.setText(cursor.getString(ForecastFragment.COL_WEATHER_DESC));
+        viewHolder.highTempView.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP)));
+        viewHolder.lowTempView.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP)));
+    }
+
+    public static class ViewHolder{
+        public final ImageView iconView;
+        public final TextView dateView;
+        public final TextView forecastView;
+        public final TextView highTempView;
+        public final TextView lowTempView;
+
+        public ViewHolder(View view) {
+            iconView = (ImageView) view.findViewById(R.id.list_item_icon);
+            dateView = (TextView)view.findViewById(R.id.list_item_date_textview);
+            forecastView = (TextView)view.findViewById(R.id.list_item_forecast_textview);
+            highTempView = (TextView)view.findViewById(R.id.list_item_high_textview);
+            lowTempView = (TextView)view.findViewById(R.id.list_item_low_textview);
+        }
     }
 }
