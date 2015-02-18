@@ -6,10 +6,11 @@ android {
 
     defaultConfig {
         applicationId "com.example.diegelb.sunshine.app"
-        minSdkVersion 11
+        //minSdkVersion 11
+        minSdkVersion 10
         // There is a bug in version 21 where the action bar does not show up.
-        //targetSdkVersion 21
-        targetSdkVersion 20
+        targetSdkVersion 21
+        //targetSdkVersion 20
         versionCode 1
         versionName "1.0"
     }
@@ -25,6 +26,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // NOTE: There is a bug in version 21 where the action bar does not show up.
     //compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:appcompat-v7:20.0.0'
+    //compile 'com.android.support:appcompat-v7:20.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
 }
