@@ -26,6 +26,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private ForecastAdapter mForecastAdapter;
 
+    private static final String SAVED_POSITION = "SAVED_POSITION";
+
+    private int mPosition = ListView.INVALID_POSITION;
+
 
     // loader id
     private static final int FORECAST_LOADER = 0;
@@ -133,6 +137,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //                          ));
 //                    startActivity(intent);
 //                }
+
+                mPosition = position;
+
                 // CursorAdapter returns a cursor at the correct position for getItem(), or null
                 // if it cannot seek to that position.
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
@@ -145,6 +152,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 }
             }
         });
+
+        if (savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(SAVED_POSITION);
+        }
 
         return rootView;
     }
@@ -166,7 +177,14 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         weatherTask.execute(location);
     }
 
-//    @Override
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mPosition != ListView.INVALID_POSITION)
+            outState.putInt(SAVED_POSITION, mPosition);
+        super.onSaveInstanceState(outState);
+    }
+
+    //    @Override
 //    public void onStart() {
 //        super.onStart();
 //        updateWeather();
@@ -207,6 +225,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mForecastAdapter.swapCursor(data);
+        if (mPosition != ListView.INVALID_POSITION) {
+            ListView listView = (ListView) getView().findViewById(R.id.listview_forecast);
+            listView.smoothScrollToPosition(mPosition);
+        }
+
     }
 
     @Override
