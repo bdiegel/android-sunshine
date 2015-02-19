@@ -1,0 +1,83 @@
+Anrdoid Study Jam 
+
+Instructor: Evan Halley
+Wifi: Welcome!
+
+Week 1
+------
+Layouts: Linear, Frame, Relative
+ListAdapter: binds data to ListView
+- list item layout for elements
+- view recycling
+  - view are reused as they scroll offscreen
+  - the view is reused and layout is alread inflated
+  - other views (like grid) recycle
+- google material guidelines
+  - advocates using a recycler view
+	RecyclerView.Adapter
+  - separates creating the view and binding data
+  - similar to the cursoradapter
+    - newView - view inflation
+    - bindView
+
+
+View holder pattern?
+- literally a container that holds references to your views
+  http://developer.android.com/training/improving-layouts/smooth-scrolling.html
+
+Questions:
+
+minSdkkVersion
+targetSdkVersion
+compatibility library
+
+
+Week 2
+------
+- web apis & http requests
+- logcat
+- main vs background thread
+- menus
+- permssions
+- json parsing
+
+- Android recommends HttpUrlConnection
+- note: extra work involved with https + self-signed certificate
+- OkHTTP
+
+- Android attempts to render UI at 60fps (every 16.67ms)
+  if it can't -> jitter
+- tools reviewed for debugging ui performance:
+  http://www.curious-creature.com/docs/android-performance-case-study-1.html
+  - Developer Options: 
+    Profile GPU rendering: on screen as bars || dump 
+
+- AsyncTask<Params, Progress, Result>
+  doInBackground(Params...) <- array of your objects 
+- should use a Service for this?
+- AsyncTasks run in serial (they block other async tasks)
+- can be called in parallel:
+  task.executeOnExecutor(Executor exec, String)
+  task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ...
+
+Permissions
+- requests defined in Android manifest: <uses-permission
+  
+Android Studio shortcuts and tips
+- Generate menu: ALT+Ins (linux)
+- CTRL+B: Go to declaration (from resource id to resource xml file)
+- developer options: show touches, show cpu usage
+  profile gpu rendering
+  debug gpu overdraw - show wasted resources
+
+Open Weather API
+- use: q=<zipcode>,usa
+
+Questions:
+  do you use 3rd libs like retrofit (square) + gson?
+
+Questions:
+- recommendations for low-fidelity wireframe tools
+- are google apps open source
+- other common adapters?
+ 
