@@ -226,6 +226,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(createShareForecastIntent());
         }
+
+        // add content description to icon for accessibility
+        mIconView.setContentDescription(weatherDescription);
     }
 
     @Override

@@ -99,6 +99,9 @@ public class ForecastAdapter extends CursorAdapter {
         viewHolder.forecastView.setText(cursor.getString(ForecastFragment.COL_WEATHER_DESC));
         viewHolder.highTempView.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP)));
         viewHolder.lowTempView.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP)));
+
+        // add content description to icon for accessibility
+        viewHolder.iconView.setContentDescription(cursor.getString(ForecastFragment.COL_WEATHER_DESC));
     }
 
     public static class ViewHolder{
