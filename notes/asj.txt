@@ -76,7 +76,43 @@ Open Weather API
 Questions:
   do you use 3rd libs like retrofit (square) + gson?
 
+
+Week 3
+------
+New Activities & Intents
+- click listeners, toasts, creating and starting activities
+- prefs, intents, broadcast recv
+
+Intents
+- explicit (specifies Activity) 
+- implicit (by action)
+  new Intent(Intent.ACTION_SEND)
+- intents can carry data
+  intent.putExtra(Intent.EXTRA_TEXT, message)
+- URIs used 
+- intent types: HTTP.PLAIN_TEXT
+- startActivity(intent), startService(..), sendBroadcast(..
+- apps declare intent-filters to define types of intents they handle
+
+Preferences
+- xml/prefs_general.xml
+- SettingsActivity
+- stored in SharedPreferences object
+- written to file in apps private storage
+  /data/data/<app>/shared_prefs
+  the database files are also here
+- recommended now to use PreferenceFragment (instead of Activity)
+- can have dependencies in the xml using the 'key' of another pref
+- setShareHistoryFileName <- to remember the user choice
+
+
+Resources:
+- youtube: androiddevelopers
+- developer.android.com/guide
+
+
 Questions:
+- Material Design: RecyclerView, Toolbar, Cards
 - recommendations for low-fidelity wireframe tools
 - are google apps open source
 - other common adapters?
