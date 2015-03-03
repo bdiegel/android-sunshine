@@ -1,6 +1,5 @@
 package com.example.diegelb.sunshine.app;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,7 +18,7 @@ import android.widget.ListView;
 
 import com.example.diegelb.sunshine.app.data.WeatherContract;
 import com.example.diegelb.sunshine.app.data.WeatherContract.WeatherEntry;
-import com.example.diegelb.sunshine.app.service.SunshineService;
+import com.example.diegelb.sunshine.app.sync.SunshineSyncAdapter;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -178,13 +177,32 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        Intent serviceIntent = new Intent(getActivity(), SunshineService.class);
-        serviceIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
-            Utility.getPreferredLocation(getActivity()));
-        getActivity().startService(serviceIntent);
+        // 1. use AsyncTask to load data
 //        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
 //        String location = Utility.getPreferredLocation(getActivity());
-//        weatherTask.execute(location);
+//        weatherTask.execute(location)
+
+        // 2. Replace AsyncTask with a Service (refactored code)
+//        Intent serviceIntent = new Intent(getActivity(), SunshineService.class);
+//        serviceIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+//              Utility.getPreferredLocation(getActivity()));
+//        getActivity().startService(serviceIntent);
+
+        // 3. Use Alarm with PendingIntent to start the service
+//        AlarmManager alarmManager = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+//        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+//              Utility.getPreferredLocation(getActivity()));
+//        // we only use the pendingIntent once, so we use FLAG_ONE_SHOT
+//        PendingIntent alarmIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+//        // trigger one second from now:
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000, alarmIntent);
+
+        // Force a test of our sync adapter
+        SunshineSyncAdapter.syncImmediately(getActivity());
+
+//        Account account = AccountManager.get(getActivity()).getAccountsByType(getString(R.string.sync_account_type))[0];
+//        ContentResolver.requestSync(account, getString(R.string.content_authority), null);
     }
 
     @Override
