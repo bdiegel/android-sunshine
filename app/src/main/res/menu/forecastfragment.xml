@@ -7,4 +7,9 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_viewmap"
+          android:title="@string/action_viewmap"
+          android:orderInCategory="100"
+          app:showAsAction="never" />
+
 </menu>
