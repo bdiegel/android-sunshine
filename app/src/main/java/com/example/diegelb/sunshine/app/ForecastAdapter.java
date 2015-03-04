@@ -30,7 +30,7 @@ public class ForecastAdapter extends CursorAdapter {
     }
 
     private String formatTemp(double temp) {
-        return Utility.formatTemperature(mContext, temp, Utility.isMetric(mContext));
+        return Utility.formatTemperature(mContext, temp); //, Utility.isMetric(mContext));
     }
 
     /*
@@ -97,8 +97,15 @@ public class ForecastAdapter extends CursorAdapter {
         //viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(weatherId));
         viewHolder.dateView.setText(Utility.getFriendlyDayString(context, cursor.getLong(ForecastFragment.COL_WEATHER_DATE)));
         viewHolder.forecastView.setText(cursor.getString(ForecastFragment.COL_WEATHER_DESC));
-        viewHolder.highTempView.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP)));
-        viewHolder.lowTempView.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP)));
+
+        double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
+        double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
+
+        viewHolder.highTempView.setText(Utility.formatTemperature(context, high));
+        viewHolder.lowTempView.setText(Utility.formatTemperature(context, low));
+
+//        viewHolder.highTempView.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP)));
+//        viewHolder.lowTempView.setText(formatTemp(cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP)));
 
         // add content description to icon for accessibility
         viewHolder.iconView.setContentDescription(cursor.getString(ForecastFragment.COL_WEATHER_DESC));

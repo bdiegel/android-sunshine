@@ -198,10 +198,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         boolean isMetric = Utility.isMetric(getActivity());
 
         String high = Utility.formatTemperature(
-              this.getActivity(), data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
+              this.getActivity(), data.getDouble(COL_WEATHER_MAX_TEMP));
+              //this.getActivity(), data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
 
         String low = Utility.formatTemperature(
-              this.getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
+              this.getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP));
+              //this.getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
 
 
         //TextView detailTextView = (TextView)getView().findViewById(R.id.detail_text);
