@@ -116,4 +116,53 @@ Questions:
 - recommendations for low-fidelity wireframe tools
 - are google apps open source
 - other common adapters?
+
+Week 4
+------
+Lesson 4a - ContentProviders
+
+
+Week 5
+------
+Activity lifecycle + SavedInstanceState
+- onSaveInstanceState(Bundle bundle)
+  bundle.putString("key", value)
+  extract data from Bundle in onCreate(Bundle bundle)
+- bundle may be null in onCreate
+- useful for saving/restoring form state between orientation change
+- CTRL + F11 <- rotate the emulator
+
+ContentProviders
+- share data between apps
+- abstract data implementation from client
+- used syncadapters, loaders, cursoradapters
+- Settings -> Accounts - displays syncadapters on device
+- Loaders (later lesson) 
+- created DBHelper class to manage SQLite
+
+Building ContentProvider
+1. determine URIs
+2. update contract class
+3. fill out URIMatcher
+   maps URIs to constants used by contentprovider functions
+4. implement functions 
+   query, insert, update, delete
+   onCreate, 
+   getType(uri) - returns MIMETYPE of data at URI
+
+Declaring ContentProvider
+- can be 'exported' for use by other apps
+- define in manifest
+
+URIs
+- content://<authority>/<path>/<query>
+
+Next week:
+Lesson 4c/5
+Loaders and Responsive Layouts
+Final Projects:
+
+
+
+
  
