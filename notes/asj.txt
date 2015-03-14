@@ -157,11 +157,61 @@ Declaring ContentProvider
 URIs
 - content://<authority>/<path>/<query>
 
-Next week:
-Lesson 4c/5
-Loaders and Responsive Layouts
-Final Projects:
+Week 6
+-------
+Loaders
+- simple data loading
+- asynchronous data loading for Activities & Fragments
+- Managed by LoaderManager (not Activity lifecycle)
 
+Implementation
+- Extend LoaderManager.LoaderCallbacks
+- define a unique id
+- Implement: 
+  onCreateLoader
+  onLoadFinished
+  onLoaderReset
+
+CursorAdapter
+- bind database cursor to AdapterView (ListView, GridView, ...)
+- newView - inflate view from xml
+- bindView - extract data from cursor and populate views
+
+Views & ViewGroups
+- view groups are views that can contain views (layouts)
+- views: basic building blocks (ImageView, TextView...)
+
+ViewHolder Pattern
+- hold refs to views
+- used by RecyclerView 
+
+Responsive Layouts
+- px (pixels) <- BAD
+- use dip/dp (device independent pixels) <- GOOD!
+- resources
+  layout-sw600dp: 'smallest width'
+  drawable-v21: api level
+  mipmap-xxhdpi - screen density
+- deeply nested layouts have poor performace
+
+Fragments
+- modularize ui
+  different flows for different screen sizes/orientations
+- fragments can be used with ViewPager
+- own lifecycle 
+- creating fragments and adding them to the view
+  is done using fragmeent transactions using the
+  fragment manager
+- use Bundle to pass data to fragments
+  - MainActivity adds contenturi(Parcelable) to Bundle
+    to pass the DetailFragment
+
+
+
+
+
+Final Projects:
+- Demo: Th April 16 Durham
 
 
 
