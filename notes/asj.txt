@@ -206,13 +206,57 @@ Fragments
   - MainActivity adds contenturi(Parcelable) to Bundle
     to pass the DetailFragment
 
+Final Session
+=============
+Services and Notifications
 
+Services
+- run at higher priority than background activity (lower chance of being killed)
+- run in main thread by default
+- callbacks: onCreate, onStartCommand, onDestroy, onBind
+- uses: process push messages, play music, sync data
 
+IntentService
+- processing Intents
+- implement: onHandleIntent
+  - runs on background thread
+- convenient to process queue of incoming intents
+
+AlarmManager
+- system service to schedule execution of background tasks using PendingIntents
+- wrap Intent in PendingIntent; 
+- periodic refreshes
+
+Efficient Data Transfers
+- data prefetching
+- batch data transfers
+- reuse data connections
+- impact on battery
+- Job Scheduler
+  - lets the system batch jobs
+  - only Android 5.0+
+
+SyncAdapters
+- shown in Settings -> Accounts
+- framework for managed user authentication and data synchronization with external resources
+- Create Authenticator: how syncadpter framework accesses your authenticator 
+  - Implement AbstractAccountAuthenticator
+  - create AuthenticatorService: 
+    onCreate - create your authenticator
+    onBind
+  - update manifest
+- create SyncAdapter
+- uses: on demand (sync action), periodic (using alarm), post event (data changes locally/remotely)
+  
+Notifications
+- alerting users to event 
+- even if app is not being used
+- Notification(Compat).Builder
+- very high priority: service.startForeground(noficicationId, notification)
 
 
 Final Projects:
-- Demo: Th April 16 Durham
+- Demo: Th April 16 Durham 6:30
+- downstairs classroom or at 2Ts
 
 
-
- 
